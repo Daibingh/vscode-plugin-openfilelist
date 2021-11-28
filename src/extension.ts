@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('hello.openfilelist', () => {
+	let disposable = vscode.commands.registerCommand('hdb.openfilelist', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		// vscode.window.showTextDocument(vscode.Uri.file('E:/工作培训/vscode-plugin/test-backup/hello/src/helper.py'));
@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const workdir: string = vscode.workspace.workspaceFolders[0].uri.path;
 		vscode.window.showInformationMessage(`${workdir}`);
 
-		child_process.exec(`python ${__dirname}/helper.py ${workdir}`, (err:any, stdout:string, stderr:string) => {
+		child_process.exec(`python ${__dirname}/openfilelist.py ${workdir}`, (err:any, stdout:string, stderr:string) => {
 			if (err) {
 				console.log(`err: ${err}`);
 				return;
@@ -47,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 		};
 			for (var i=0;i<obj.length;++i) {
 				vscode.window.showTextDocument(vscode.Uri.file(obj[i]), options);
-				console.log(`open ${obj[i]} !`);
+				console.log(`open ${obj[i]}`);
 				
 			}
     	});
@@ -55,6 +55,56 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
+
+	let disposable2 = vscode.commands.registerCommand('hdb.relaceheadermacro', (uri) => {
+		if (!vscode.window.activeTextEditor) {
+			return;
+		}
+		const fileName: string = vscode.window.activeTextEditor.document.fileName;
+		child_process.exec(`python ${__dirname}/relaceheadermacro.py ${fileName}`, (err:any, stdout:string, stderr:string) => {
+			if (err) {
+				console.log(`err: ${err}`);
+				return;
+			}
+			let obj: any = JSON.parse(stdout);
+			if (!vscode.window.activeTextEditor) {
+				return;
+			}
+			if (obj.occur === 0)
+			{
+				vscode.window.showInformationMessage("cant not find patten!");
+				return;
+			}
+			vscode.window.activeTextEditor.edit(editBuilder => {
+				if (!vscode.window.activeTextEditor) {
+					return;
+				}
+				const end = new vscode.Position(vscode.window.activeTextEditor.document.lineCount + 1, 0);
+				const text = obj.content;
+				editBuilder.replace(new vscode.Range(new vscode.Position(0, 0), end), text);
+			});
+			vscode.window.showInformationMessage(`find pattern ${obj.patten} ${obj.occur} times, replace with ${obj.repl}`);
+		});
+	});
+
+	context.subscriptions.push(disposable2);
+
+	let disposable3 = vscode.commands.registerCommand('hdb.addcommoncode', (uri) => {
+		if (!vscode.window.activeTextEditor) {
+			return;
+		}
+		const fileName: string = vscode.window.activeTextEditor.document.fileName;
+		child_process.exec(`python ${__dirname}/addcommoncode.py ${fileName}`, (err:any, stdout:string, stderr:string) => {
+			if (err) {
+				console.log(`err: ${err}`);
+				return;
+			}
+			
+			vscode.window.showInformationMessage("finished!");
+		});
+	});
+
+	context.subscriptions.push(disposable3);
 
 }
 

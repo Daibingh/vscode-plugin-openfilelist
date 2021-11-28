@@ -1,7 +1,7 @@
 {
-  "name": "hello",
-	"displayName": "openfilelist",
-	"description": "openfilelist",
+  "name": "hdb",
+	"displayName": "hdbExt",
+	"description": "my vscode extension",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.62.0"
@@ -10,21 +10,39 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:hello.openfilelist"
+        "onCommand:hdb.openfilelist",
+        "onCommand:hdb.relaceheadermacro",
+        "onCommand:hdb.addcommoncode"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "hello.openfilelist",
-				"title": "openfilelist"
+				"command": "hdb.openfilelist",
+				"title": "hdb:openfilelist"
+			},
+			{
+				"command": "hdb.relaceheadermacro",
+				"title": "hdb:relaceheadermacro"
+			},
+			{
+				"command": "hdb.addcommoncode",
+				"title": "hdb:addcommoncode"
 			}
 		],
 		"menus": {
 			"editor/context": [
 				{
 					"when": "editorFocus",
-					"command": "hello.openfilelist"
+					"command": "hdb.openfilelist"
+				},
+				{
+					"when": "editorFocus",
+					"command": "hdb.relaceheadermacro"
+				},
+				{
+					"when": "editorFocus",
+					"command": "hdb.addcommoncode"
 				}
 			]
 		}
