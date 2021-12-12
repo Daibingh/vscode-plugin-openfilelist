@@ -14,4 +14,3 @@ if __name__ == '__main__':
             f.write('\n#ifndef {0}_H\n#define {0}_H\n\n'.format(name.upper()))
             f.write(text)
             f.write('#endif\n')
-
